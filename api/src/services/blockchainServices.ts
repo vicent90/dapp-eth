@@ -22,18 +22,17 @@ export async function transferToken(from: string, to: string, tokenId: bigint): 
 }
 
 export async function getOwnedNFTs(address: string): Promise<{ tokenId: string, tokenURI: string }[]> {
-    const nftPromises = [];
+    const nfts = [];
     const totalSupply = await contract.tokenCounter();
     
     for (let tokenId = 0n; tokenId < totalSupply; tokenId++) {
         const owner = await contract.ownerOf(tokenId);
         if (owner.toLowerCase() === address.toLowerCase()) {
             const tokenURI = await contract.tokenURI(tokenId);
-            nftPromises.push({ tokenId: tokenId.toString(), tokenURI });
+            nfts.push({ tokenId: tokenId.toString(), tokenURI });
         }
     }
-    
-    const nfts = await Promise.all(nftPromises);
+
     return nfts;
 }
 
